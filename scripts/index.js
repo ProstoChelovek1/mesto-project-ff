@@ -1,75 +1,84 @@
 const content = document.querySelector('.content');
-const popup = document.querySelector('.popup')
 const popupNew = document.querySelector('.popup_type_new-card')
-const popupEdit = document.querySelector('.popup_type_edit')
 
 const placesContainer = content.querySelector('.places__list');
 const openButton = content.querySelector('.profile__add-button');
 
 const addButton = popupNew.querySelector('.popup__button');
 const closeButton = popupNew.querySelector('.popup__close');
-const delelteButton = popupNew.querySelector('.card__delete-button');
 
-  
+
 // @todo: Темплейт карточки
-openButton.addEventListener('click', openPopup); 
+
+openButton.addEventListener('click', openPopup);
+
 function openPopup() {
-	popupNew.classList.add('popup_is-opened');
+    popupNew.classList.add('popup_is-opened');
 }
 
-closeButton.addEventListener('click', closePopup); 
+closeButton.addEventListener('click', closePopup);
+
 function closePopup() {
-	popupNew.classList.toggle('popup_is-opened');
+    popupNew.classList.toggle('popup_is-opened');
 }
 
 // @todo: DOM узлы
 
+function creatCard(placetValue, imageValue) {
+    const CardTemplate = document.querySelector('#card-template').content;
+    const CardElement = CardTemplate.querySelector('.card').cloneNode(true);
+
+    CardElement.querySelector('.card__title').textContent = placetValue;
+    CardElement.querySelector('.card__image').src = imageValue;
+
+
+    CardElement.querySelector('.card__like-button').addEventListener('click', function(evt) {
+        if (this.classList.contains('card__like-button_is-active')) {
+            evt.target.classList.remove('card__like-button_is-active');
+        } else {
+            evt.target.classList.add('card__like-button_is-active');
+        }
+    });
+
+    var delelteButton = CardElement.querySelector(".card__delete-button");
+    delelteButton.addEventListener("click", function() {
+        delelteCard(CardElement);
+    });
+
+    return CardElement;
+}
 // @todo: Функция создания карточки
 
 function addCard(placetValue, imageValue) {
-	const CardTemplate = document.querySelector('#card-template').content;
-	const CardElement = CardTemplate.querySelector('.card').cloneNode(true);
-	const initialCardsAdd = {name: placetValue, link: imageValue};
-
-	CardElement.querySelector('.card__title').textContent = placetValue;
-	CardElement.querySelector('.card__image').src = imageValue;
-
-	initialCards.push(initialCardsAdd);
-
-	placesContainer.append(CardElement);
-
-	CardElement.querySelector('.card__like-button').addEventListener('click', function (evt) {
-		if(this.classList.contains('card__like-button_is-active')) {
-			evt.target.classList.remove('card__like-button_is-active');
-		} else {
-			evt.target.classList.add('card__like-button_is-active');
-		}
-	  }); 
-
-
-	CardElement.querySelector('.card__delete-button').addEventListener('click', function (evt) {
-		console.log(evt);
-	  }); 
-	closePopup();
+    placesContainer.append(creatCard(placetValue, imageValue));
 }
-console.log(1);
 // @todo: Функция удаления карточки
+
+function delelteCard(CardElement) {
+    CardElement.remove();
+}
 
 // @todo: Вывести карточки на страницу
 
+addButton.addEventListener('click', function() {
+    const place = popupNew.querySelector('.popup__input_type_card-name');
+    const image = popupNew.querySelector('.popup__input_type_url');
 
-addButton.addEventListener('click', function () {
-	place = popupNew.querySelector('.popup__input_type_card-name');
-	const image = popupNew.querySelector('.popup__input_type_url');
+    addCard(place.value, image.value);
 
-	addCard(place.value, image.value);
+    const initialCardsAdd = {
+        name: place.value,
+        link: image.value
+    };
+    initialCards.push(initialCardsAdd);
 
-	place.value = '';
-	image.value = '';
+
+    place.value = '';
+    image.value = '';
+
+    closePopup();
 });
 
-
-
-for (let i = 0; i < 6; i++) {
-	addCard(initialCards[i].name, initialCards[i].link)
+for (let i = 0; i < initialCards.length; i++) {
+    addCard(initialCards[i].name, initialCards[i].link);
 }
