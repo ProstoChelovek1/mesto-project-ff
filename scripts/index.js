@@ -1,8 +1,6 @@
 const content = document.querySelector('.content');
 
 const placesContainer = content.querySelector('.places__list');
-const openButton = content.querySelector('.profile__add-button');
-
 
 // @todo: Темплейт карточки
 
@@ -15,11 +13,11 @@ function creatCard(initialCardsLocal, delelteCard) {
 
     cardElement.querySelector('.card__title').textContent = initialCardsLocal.name;
     cardElement.querySelector('.card__image').src = initialCardsLocal.link;
+    cardElement.querySelector('.card__image').alt = "Фото";
+
 
     const delelteButton = cardElement.querySelector(".card__delete-button");
-    delelteButton.addEventListener("click", function() {
-        delelteCard(cardElement);
-    });
+    delelteButton.addEventListener("click", delelteCard);
 
     return cardElement;
 }
@@ -30,9 +28,9 @@ function addCard(initialCardsLocal, delelteCard) {
 }
 // @todo: Функция удаления карточки
 
-const delelteCard = (cardElement) => {
-  cardElement.remove();
-};
+ function delelteCard(evt) {
+    evt.target.closest(".card").remove();
+}
 
 // @todo: Вывести карточки на страницу
 
